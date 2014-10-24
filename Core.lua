@@ -376,6 +376,7 @@ function SUI:AddText(name, text) -- adds an dynamic created FontString to the de
 	frame.s:SetShadowOffset(1, -1)
 	frame.s:SetTextColor(1, 1, 1)
 	frame.s:SetText(text)
+	frame.s.s = 15
 
 	frametbl[account] = frame;
 
@@ -393,7 +394,7 @@ function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the de
 	frame:SetMovable(true)
 	frame:Disable(true)
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame) end end)
 
 	frametbl[account] = frame;
 
@@ -454,6 +455,33 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 
 	if ftype == "FontString" then
 
+
+		if mod == "width+" then
+			accframe.s.s = accframe.s.s + 1
+			accframe.s:SetFont("Fonts\\ARIALN.TTF", accframe.s.s, "OUTLINE")
+			accframe:SetSize(accframe:GetWidth(), accframe:GetHeight() + 1) 
+			MainFrame.sel.se:SetText(accframe.s.s) 
+		elseif mod == "width-" then
+			accframe.s.s = accframe.s.s - 1
+			accframe.s:SetFont("Fonts\\ARIALN.TTF", accframe.s.s, "OUTLINE")
+			accframe:SetSize(accframe:GetWidth(), accframe:GetHeight() - 1) 
+			MainFrame.sel.se:SetText(accframe.s.s)
+		elseif mod == "posl+" then
+			accframe:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false) + 1, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true))
+			MainFrame.sel.pe:SetText(SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false))
+		elseif mod == "posl-" then
+			accframe:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false) - 1, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true))
+			MainFrame.sel.pe:SetText(SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false))
+		elseif mod == "posb+" then
+			accframe:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false), SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true) + 1)
+			MainFrame.sel.pe2:SetText(SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true))
+		elseif mod == "posb-" then
+			accframe:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), true, false), SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true) - 1)
+			MainFrame.sel.pe2:SetText(SUI:GetRPos(accframe:GetLeft(), accframe:GetBottom(), false, true))
+		else
+			-- not triggered
+		end
+
 	else
 
 		if mod == "width+" then
@@ -498,11 +526,31 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	acIndex = tonumber(SUI:StringSplit(frame:GetName(), false, true))
 
    MainFrame.sel.n:SetText("Name:  " .. acName)
+
+   if frame:GetObjectType() == "FontString" then
+
+   	   MainFrame.sel.se:SetText(frame.s)
+	   MainFrame.sel.te:SetText(frame:GetText())
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   MainFrame.sel.se2:Disable()
+	    MainFrame.sel.seb3:Disable()
+	     MainFrame.sel.seb4:Disable()
+
+   	return 
+
+   end
+
    MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
    MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
    MainFrame.sel.te:SetText(frame:GetText())
    MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
    MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+   	MainFrame.sel.se2:Enable()
+	   MainFrame.sel.seb3:Enable()
+	     MainFrame.sel.seb4:Enable()
 
 end
 
