@@ -263,7 +263,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.c:SetPoint("BOTTOMLEFT", frame, 385, 30)
 	frame.c.text = _G["MainFrame_CloseB" .. "Text"]
 	frame.c.text:SetText("Close")
-	frame.c:SetScript("OnClick", function() --[[MainFrame:Hide()]] ReloadUI() end )
+	frame.c:SetScript("OnClick", function() MainFrame:Hide() end )
 
 	frame.b = CreateFrame("Button", "MainFrame_AddButtonB", frame, "UIPanelButtonTemplate")
 	frame.b:SetSize(80, 20)
