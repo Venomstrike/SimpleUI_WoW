@@ -368,7 +368,7 @@ function SUI:AddText(name, text) -- adds an dynamic created FontString to the de
 	frame:EnableMouse(true)
 	frame:SetMovable(true)
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame.s); MainFrame.sel:Show() end end)
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
 	
 	frame.s = MainFrame.designer:CreateFontString(name .. ";" .. account) 
 	frame.s:SetPoint("CENTER", frame, "CENTER", 0, 0)
@@ -422,6 +422,7 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 		accframe = frametbl[index]
 
 		if mod == "se" then
+			if accframe:GetObjectType() == "Frame" then accframe.s:SetFont("Fonts\\ARIALN.TTF", tonumber(MainFrame.sel.se:GetText()), "OUTLINE") return end
 			accframe:SetWidth(tonumber(MainFrame.sel.se:GetText()))
 		elseif mod == "se2" then
 			accframe:SetHeight(tonumber(MainFrame.sel.se2:GetText()))
@@ -528,10 +529,10 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 
    MainFrame.sel.n:SetText("Name:  " .. acName)
 
-   if frame:GetObjectType() == "FontString" then
+   if frame:GetObjectType() == "Frame" then
 
-   	   MainFrame.sel.se:SetText(frame.s)
-	   MainFrame.sel.te:SetText(frame:GetText())
+   	   MainFrame.sel.se:SetText(frame.s.s)
+	   MainFrame.sel.te:SetText(frame.s:GetText())
 	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
 	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
 
@@ -542,6 +543,22 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
    	return 
 
    end
+
+   if frame:GetObjectType() == "EditBox" then
+
+   	  MainFrame.sel.se:SetText(frame:GetWidth())
+	   MainFrame.sel.te:SetText(frame:GetText())
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   MainFrame.sel.se2:Disable()
+	    MainFrame.sel.seb3:Disable()
+	     MainFrame.sel.seb4:Disable()
+
+	     return
+   end
+
 
    MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
    MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
