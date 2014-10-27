@@ -74,7 +74,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	--frame:SetBackdrop(backdropS)
 
 	frame.designer = CreateFrame("Frame", "MainFrame_designer", frame) 
-	frame.designer:SetSize(frame:GetWidth()-90, frame:GetHeight()-30)
+	frame.designer:SetSize(frame:GetWidth()-90, frame:GetHeight()-110)
 	frame.designer:SetPoint("TOPLEFT", frame, 30, -30)
 	texture = frame.designer:CreateTexture()
 	texture:SetAllPoints() 
@@ -422,7 +422,7 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 		accframe = frametbl[index]
 
 		if mod == "se" then
-			if accframe:GetObjectType() == "Frame" then accframe.s:SetFont("Fonts\\ARIALN.TTF", tonumber(MainFrame.sel.se:GetText()), "OUTLINE") return end
+			if accframe:GetObjectType() == "Frame" then accframe.s:SetFont("Fonts\\ARIALN.TTF", tonumber(MainFrame.sel.se:GetText()), "OUTLINE"); accframe.s.s = MainFrame.sel.se:GetText() return end
 			accframe:SetWidth(tonumber(MainFrame.sel.se:GetText()))
 		elseif mod == "se2" then
 			accframe:SetHeight(tonumber(MainFrame.sel.se2:GetText()))
