@@ -18,11 +18,29 @@ local acIndex
 
 function SUI:OnInitialize()
 
-	MainFrame = self:CreateMainFrame()
+	self:Print(WorldFrame:GetWidth())
+
+
+	local resolutions = {GetScreenResolutions()}
+	res = resolutions[GetCurrentResolution()]
+	sizetbl = {}
+
+	if res == "800x600" then sizetbl[1] = 185; sizetbl[2] = 135 end
+	if res == "1024x768" then sizetbl[1] = 185; sizetbl[2] = 135 end
+	if res == "1152x864" then sizetbl[1] = 180; sizetbl[2] = 135 end
+	if res == "1280x1024" then sizetbl[1] = 170; sizetbl[2] = 135 end
+	if res == "1366x768" then sizetbl[1] = 240; sizetbl[2] = 135 end
+	if res == "1920x1080" then sizetbl[1] = 245; sizetbl[2] = 135 end
+
+	MainFrame = self:CreateMainFrame(sizetbl)
 
 	self:Print("AddOn succsessfully loaded!")
 
-	self:Print(WorldFrame:GetWidth() .. " " .. WorldFrame:GetHeight())
+
+
+
+
+	--MainFrame:Hide()
 
 end
 
@@ -35,7 +53,7 @@ function SUI:Print(msg) -- the print funktion with the Red Simple UI before ever
 
 end
 
-function SUI:CreateMainFrame() -- Creates the complete designer frame with all sub-frames (much functions in the OnClick-Events)
+function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame with all sub-frames (much functions in the OnClick-Events)
 	
 
 	backdropS = {
@@ -60,7 +78,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 	-- Main Frame
 	frame = CreateFrame("Frame", "MainFrame", UIParent) 
-	frame:SetSize(WorldFrame:GetWidth()+185, WorldFrame:GetHeight()+135)
+	frame:SetSize(WorldFrame:GetWidth()+sizetbl[1], WorldFrame:GetHeight()+sizetbl[2])
 	frame:SetFrameStrata("DIALOG")
 	frame:SetPoint("CENTER")
 	texture = frame:CreateTexture()
@@ -107,6 +125,13 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.sel.background = texture
 	--frame.sel:SetBackdrop(backdropS)
 	--frame.sel:SetBackdropBorderColor(0.2,0.2,0.2,1)
+
+	frame.sel.ext = CreateFrame("Button", "MainFrame_selexb", frame.sel, "UIPanelButtonTemplate")
+	frame.sel.ext:SetSize(45, 45)
+	frame.sel.ext:SetPoint("BOTTOMRIGHT", frame.sel, -10, 8)
+	frame.sel.ext.text = _G["MainFrame_selexb" .. "Text"]
+	frame.sel.ext.text:SetText("EXT")
+	frame.sel.ext:SetScript("OnClick", function() SUI:StartExt() end )
 
 	frame.sel.n = frame.sel:CreateFontString(nil, "OVERLAY")
 	frame.sel.n:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -5)
@@ -233,7 +258,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.modes:SetTextColor(1, 1, 1)
 	frame.modes:SetText("Move Mode")
 
-	-- mover frame
+	--[[mover frame
 	frame.move = CreateFrame("Frame", "MainFrame_move", frame) 
 	frame.move:SetSize(10, 10) 
 	frame.move:SetPoint("TOPRIGHT", 10, 0) 
@@ -255,7 +280,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.resize.background = texturers
 	frame.resize:EnableMouse(true)
 	frame.resize:SetScript("OnMouseDown", function (self, value) MainFrame:StartSizing() end) 
-	frame.resize:SetScript("OnMouseUp", function (self, value) MainFrame:StopMovingOrSizing(); MainFrame.designer:SetMaxResize(MainFrame:GetWidth() - 60, MainFrame:GetHeight() - 90); SUI:Print(MainFrame:GetWidth() .. " " .. MainFrame:GetHeight()) end)
+	frame.resize:SetScript("OnMouseUp", function (self, value) MainFrame:StopMovingOrSizing(); MainFrame.designer:SetMaxResize(MainFrame:GetWidth() - 60, MainFrame:GetHeight() - 90); SUI:Print(MainFrame:GetWidth() .. " " .. MainFrame:GetHeight()) end)]]
 
 	--button close
 	frame.c = CreateFrame("Button", "MainFrame_CloseB", frame, "UIPanelButtonTemplate")
@@ -352,6 +377,7 @@ function SUI:AddButton(name, text) -- adds an dynamic created button to the desi
 	frame:SetMovable(true)
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
 	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "Button"
 
 	frametbl[account] = frame;
 
@@ -378,6 +404,7 @@ function SUI:AddText(name, text) -- adds an dynamic created FontString to the de
 	frame.s:SetTextColor(1, 1, 1)
 	frame.s:SetText(text)
 	frame.s.s = 15
+	frame.i = "FontString"
 
 	frametbl[account] = frame;
 
@@ -396,6 +423,7 @@ function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the de
 	frame:Disable(true)
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
 	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "EditBox"
 
 	frametbl[account] = frame;
 
@@ -525,7 +553,7 @@ end
 function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 
 	acName = SUI:StringSplit(frame:GetName(), true, false)
-	acIndex = tonumber(SUI:StringSplit(frame:GetName(), false, true))
+	acIndex = tonumber(self:StringSplit(frame:GetName(), false, true))
 
    MainFrame.sel.n:SetText("Name:  " .. acName)
 
@@ -618,6 +646,57 @@ function SUI:ModAttr(frame, mod)
 	if ftype == "EditBox" then frame:SetText(mod) return end
 
 	if ftype == "DropDown" then frame:SetText(mod) return end
+
+end
+
+function SUI:StartExt()
+
+	accframe = frametbl[acIndex]
+	
+	ftype = accframe.i
+
+
+	if ftype == "Frame" then 
+
+		
+
+		return
+	end
+
+	if ftype == "Button" then 
+
+		
+
+		return 
+	end
+
+	if ftype == "CheckButton" then 
+
+		
+
+		return
+	end
+
+	if ftype == "EditBox" then
+
+		
+
+		return
+	end
+
+	if ftype == "DropDown" then 
+
+		
+
+		return
+	end
+
+	if ftype == "FontString" then
+
+		
+
+		return
+	end
 
 end
 
