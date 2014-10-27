@@ -22,6 +22,8 @@ function SUI:OnInitialize()
 
 	self:Print("AddOn succsessfully loaded!")
 
+	self:Print(WorldFrame:GetWidth() .. " " .. WorldFrame:GetHeight())
+
 end
 
 
@@ -36,13 +38,19 @@ end
 function SUI:CreateMainFrame() -- Creates the complete designer frame with all sub-frames (much functions in the OnClick-Events)
 	
 
-	backdrop = {
-	  bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",  -- path to the background texture
-	  edgeFile = "Interface\\DialogFrame\\UI-DialogBoxS-Border",    -- path to the border texture
-	  tile = true,      -- true to repeat the background texture to fill the frame, false to scale it
-	  tileSize = 32,    -- size (width or height) of the square repeating background tiles (in pixels)
-	  edgeSize = 32,    -- thickness of edge segments and square size of edge corners (in pixels)
-	  insets = {        -- distance from the edges of the frame to those of the background texture (in pixels)
+	backdropS = {
+	  -- path to the background texture
+	  bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",  
+	  -- path to the border texture
+	  edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+	  -- true to repeat the background texture to fill the frame, false to scale it
+	  tile = true,
+	  -- size (width or height) of the square repeating background tiles (in pixels)
+	  tileSize = 32,
+	  -- thickness of edge segments and square size of edge corners (in pixels)
+	  edgeSize = 32,
+	  -- distance from the edges of the frame to those of the background texture (in pixels)
+	  insets = {
 	    left = 11,
 	    right = 12,
 	    top = 12,
@@ -52,21 +60,21 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 	-- Main Frame
 	frame = CreateFrame("Frame", "MainFrame", UIParent) 
-	frame:SetSize(460, 500)
+	frame:SetSize(WorldFrame:GetWidth()+185, WorldFrame:GetHeight()+135)
 	frame:SetFrameStrata("DIALOG")
 	frame:SetPoint("CENTER")
 	texture = frame:CreateTexture()
 	texture:SetAllPoints() 
-	texture:SetTexture(0,0,0,0.5) 
+	texture:SetTexture(0.23,0.23,0.23,1) 
 	frame.background = texture
 	frame:EnableMouse(true)
-	frame:SetMovable(true)
-	frame:SetResizable(true)
-	frame:SetMinResize(460, 500)
-	frame:SetUserPlaced(false)
+	--frame:SetMovable(true)
+	--frame:SetResizable(true)
+	--frame:SetMinResize(460, 500)
+	--frame:SetBackdrop(backdropS)
 
 	frame.designer = CreateFrame("Frame", "MainFrame_designer", frame) 
-	frame.designer:SetSize(400, 400)
+	frame.designer:SetSize(frame:GetWidth()-90, frame:GetHeight()-30)
 	frame.designer:SetPoint("TOPLEFT", frame, 30, -30)
 	texture = frame.designer:CreateTexture()
 	texture:SetAllPoints() 
@@ -75,8 +83,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.designer:EnableMouse(true)
 	frame.designer:SetResizable(true)
 	frame.designer:SetMinResize(30, 30)
-	frame.designer:SetMaxResize(405, 405)
-	frame.designer:SetBackdropBorderColor(0, 1, 0, 1)
+	frame.designer:SetMaxResize(frame:GetWidth()-60, frame:GetHeight()-105)
 
 	frame.designer.resize = CreateFrame("Frame", "MainFrame_designer_resize", frame.designer) 
 	frame.designer.resize:SetSize(10, 10) 
@@ -91,27 +98,18 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 
 	frame.sel = CreateFrame("Frame", "MainFrame_sel", frame) 
-	frame.sel:SetSize(180, 200)
-	frame.sel:SetFrameStrata("HIGH")
-	frame.sel:SetPoint("TOPLEFT", frame, -180, -40)
+	frame.sel:SetSize(410, 60)
+	frame.sel:SetFrameStrata("DIALOG")
+	frame.sel:SetPoint("BOTTOMLEFT", frame, 480, 0)
 	texture = frame.sel:CreateTexture()
 	texture:SetAllPoints() 
-	texture:SetTexture(0,0,0,0.5) 
+	texture:SetTexture(0,0,0,0.3) 
 	frame.sel.background = texture
-	frame.sel:EnableMouse(true)
-	frame.sel:SetMovable(true)
-	frame.sel:SetBackdropBorderColor(0, 0, 0, 0.2)
-
-	frame.sel.hs = frame.sel:CreateFontString(nil, "OVERLAY")
-	frame.sel.hs:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -5)
-	frame.sel.hs:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
-	frame.sel.hs:SetJustifyH("LEFT")
-	frame.sel.hs:SetShadowOffset(1, -1)
-	frame.sel.hs:SetTextColor(1, 1, 1)
-	frame.sel.hs:SetText("Select Tab")
+	--frame.sel:SetBackdrop(backdropS)
+	--frame.sel:SetBackdropBorderColor(0.2,0.2,0.2,1)
 
 	frame.sel.n = frame.sel:CreateFontString(nil, "OVERLAY")
-	frame.sel.n:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -35)
+	frame.sel.n:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -5)
 	frame.sel.n:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
 	frame.sel.n:SetJustifyH("LEFT")
 	frame.sel.n:SetShadowOffset(1, -1)
@@ -119,7 +117,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.sel.n:SetText("Name:")
 
 	frame.sel.t = frame.sel:CreateFontString(nil, "OVERLAY", frame.sel)
-	frame.sel.t:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -65)
+	frame.sel.t:SetPoint("BOTTOMLEFT", frame.sel, "BOTTOMLEFT", 5, 10)
 	frame.sel.t:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
 	frame.sel.t:SetJustifyH("LEFT")
 	frame.sel.t:SetShadowOffset(1, -1)
@@ -127,12 +125,12 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.sel.t:SetText("Text:") 
 	frame.sel.te = CreateFrame("EditBox", "MainFrame_sel_textEB", frame.sel, "InputBoxTemplate")
 	frame.sel.te:SetSize(100, 20)
-	frame.sel.te:SetPoint("TOPLEFT", frame.sel, 50, -65)
+	frame.sel.te:SetPoint("BOTTOMLEFT", frame.sel, 55, 5)
 	frame.sel.te:SetText("")
-	frame.sel.te:SetScript("OnEnterPressed", function() index = acIndex; accframe = frametbl[index]; accframe:SetText(MainFrame.sel.te:GetText()) end )
+	frame.sel.te:SetScript("OnEnterPressed", function() index = acIndex; accframe = frametbl[index]; SUI:ModAttr(accframe, MainFrame.sel.te:GetText())  end )
 
 	frame.sel.s = frame.sel:CreateFontString(nil, "OVERLAY")
-	frame.sel.s:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -105)
+	frame.sel.s:SetPoint("CENTER", frame.sel, "CENTER", 0, 15)
 	frame.sel.s:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
 	frame.sel.s:SetJustifyH("LEFT")
 	frame.sel.s:SetShadowOffset(1, -1)
@@ -140,38 +138,38 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.sel.s:SetText("Size:")
 	frame.sel.se = CreateFrame("EditBox", "MainFrame_sel_s1EB", frame.sel, "InputBoxTemplate")
 	frame.sel.se:SetSize(30, 20)
-	frame.sel.se:SetPoint("TOPLEFT", frame.sel, 50, -105)
+	frame.sel.se:SetPoint("CENTER", frame.sel, 50, 15)
 	frame.sel.se:SetText("")
 	frame.sel.se:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se") end )
 
 	frame.sel.seb1 = CreateFrame("Button", "MainFrame_sb1B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb1:SetSize(20, 10)
-	frame.sel.seb1:SetPoint("CENTER", frame.sel, -5, -10)
+	frame.sel.seb1:SetPoint("CENTER", frame.sel, 70, 20)
 	frame.sel.seb1.text = _G["MainFrame_sb1B" .. "Text"]
 	frame.sel.seb1.text:SetText("+")
 	frame.sel.seb1:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width+") end )
 	frame.sel.seb2 = CreateFrame("Button", "MainFrame_sb2B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb2:SetSize(20, 10)
-	frame.sel.seb2:SetPoint("CENTER", frame.sel, -5, -20)
+	frame.sel.seb2:SetPoint("CENTER", frame.sel, 70, 10)
 	frame.sel.seb2.text = _G["MainFrame_sb2B" .. "Text"]
 	frame.sel.seb2.text:SetText("-")
 	frame.sel.seb2:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width-") end )
 
 	frame.sel.se2 = CreateFrame("EditBox", "MainFrame_sel_s2EB", frame.sel, "InputBoxTemplate")
 	frame.sel.se2:SetSize(30, 20)
-	frame.sel.se2:SetPoint("TOPLEFT", frame.sel, 115, -105)
+	frame.sel.se2:SetPoint("CENTER", frame.sel, 110, 15)
 	frame.sel.se2:SetText("")
 	frame.sel.se2:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se2") end )
 
 	frame.sel.seb3 = CreateFrame("Button", "MainFrame_sb3B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb3:SetSize(20, 10)
-	frame.sel.seb3:SetPoint("CENTER", frame.sel, 60, -10)
+	frame.sel.seb3:SetPoint("CENTER", frame.sel, 130, 20)
 	frame.sel.seb3.text = _G["MainFrame_sb3B" .. "Text"]
 	frame.sel.seb3.text:SetText("+")
 	frame.sel.seb3:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high+") end )
 	frame.sel.seb4 = CreateFrame("Button", "MainFrame_sb4B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb4:SetSize(20, 10)
-	frame.sel.seb4:SetPoint("CENTER", frame.sel, 60, -20)
+	frame.sel.seb4:SetPoint("CENTER", frame.sel, 130, 10)
 	frame.sel.seb4.text = _G["MainFrame_sb4B" .. "Text"]
 	frame.sel.seb4.text:SetText("-")
 	frame.sel.seb4:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high-") end )
@@ -179,7 +177,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 
 	frame.sel.p = frame.sel:CreateFontString(nil, "OVERLAY")
-	frame.sel.p:SetPoint("TOPLEFT", frame.sel, "TOPLEFT", 5, -145)
+	frame.sel.p:SetPoint("CENTER", frame.sel, "CENTER", 0, -15)
 	frame.sel.p:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
 	frame.sel.p:SetJustifyH("LEFT")
 	frame.sel.p:SetShadowOffset(1, -1)
@@ -188,38 +186,38 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 	frame.sel.pe = CreateFrame("EditBox", "MainFrame_sel_p1EB", frame.sel, "InputBoxTemplate")
 	frame.sel.pe:SetSize(30, 20)
-	frame.sel.pe:SetPoint("CENTER", frame.sel, 50, -55)
+	frame.sel.pe:SetPoint("CENTER", frame.sel, 50, -15)
 	frame.sel.pe:SetText("")
 	frame.sel.pe:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe") end )
 
 	frame.sel.peb1 = CreateFrame("Button", "MainFrame_pb1B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb1:SetSize(20, 10)
-	frame.sel.peb1:SetPoint("CENTER", frame.sel, 70, -50)
+	frame.sel.peb1:SetPoint("CENTER", frame.sel, 70, -10)
 	frame.sel.peb1.text = _G["MainFrame_pb1B" .. "Text"]
 	frame.sel.peb1.text:SetText("+")
 	frame.sel.peb1:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl+") end )
 	frame.sel.peb2 = CreateFrame("Button", "MainFrame_pb2B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb2:SetSize(20, 10)
-	frame.sel.peb2:SetPoint("CENTER", frame.sel, 70, -60)
+	frame.sel.peb2:SetPoint("CENTER", frame.sel, 70, -20)
 	frame.sel.peb2.text = _G["MainFrame_pb2B" .. "Text"]
 	frame.sel.peb2.text:SetText("-")
 	frame.sel.peb2:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl-") end )
 
 	frame.sel.pe2 = CreateFrame("EditBox", "MainFrame_sel_p2EB", frame.sel, "InputBoxTemplate")
 	frame.sel.pe2:SetSize(30, 20)
-	frame.sel.pe2:SetPoint("CENTER", frame.sel, -5, -55)
+	frame.sel.pe2:SetPoint("CENTER", frame.sel, 110, -15)
 	frame.sel.pe2:SetText("")
 	frame.sel.pe2:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe2") end )
 
 	frame.sel.peb3 = CreateFrame("Button", "MainFrame_pb3B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb3:SetSize(20, 10)
-	frame.sel.peb3:SetPoint("CENTER", frame.sel, 15, -50)
+	frame.sel.peb3:SetPoint("CENTER", frame.sel, 130, -10)
 	frame.sel.peb3.text = _G["MainFrame_pb3B" .. "Text"]
 	frame.sel.peb3.text:SetText("+")
 	frame.sel.peb3:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb+") end )
 	frame.sel.peb4 = CreateFrame("Button", "MainFrame_pb4B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb4:SetSize(20, 10)
-	frame.sel.peb4:SetPoint("CENTER", frame.sel, 15, -60)
+	frame.sel.peb4:SetPoint("CENTER", frame.sel, 130, -20)
 	frame.sel.peb4.text = _G["MainFrame_pb4B" .. "Text"]
 	frame.sel.peb4.text:SetText("-")
 	frame.sel.peb4:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb-") end )
@@ -257,7 +255,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.resize.background = texturers
 	frame.resize:EnableMouse(true)
 	frame.resize:SetScript("OnMouseDown", function (self, value) MainFrame:StartSizing() end) 
-	frame.resize:SetScript("OnMouseUp", function (self, value) MainFrame:StopMovingOrSizing(); MainFrame.designer:SetMaxResize(MainFrame:GetWidth() - 60, MainFrame:GetHeight() - 90) end)
+	frame.resize:SetScript("OnMouseUp", function (self, value) MainFrame:StopMovingOrSizing(); MainFrame.designer:SetMaxResize(MainFrame:GetWidth() - 60, MainFrame:GetHeight() - 90); SUI:Print(MainFrame:GetWidth() .. " " .. MainFrame:GetHeight()) end)
 
 	--button close
 	frame.c = CreateFrame("Button", "MainFrame_CloseB", frame, "UIPanelButtonTemplate")
@@ -265,7 +263,7 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 	frame.c:SetPoint("BOTTOMLEFT", frame, 385, 30)
 	frame.c.text = _G["MainFrame_CloseB" .. "Text"]
 	frame.c.text:SetText("Close")
-	frame.c:SetScript("OnClick", function() MainFrame:Hide() end )
+	frame.c:SetScript("OnClick", function() --[[MainFrame:Hide()]] ReloadUI() end )
 
 	frame.b = CreateFrame("Button", "MainFrame_AddButtonB", frame, "UIPanelButtonTemplate")
 	frame.b:SetSize(80, 20)
@@ -338,6 +336,9 @@ function SUI:CreateMainFrame() -- Creates the complete designer frame with all s
 
 end
 
+
+-- frame:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false), SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true)) | to set frames to the designer after moved (unused)
+
 function SUI:AddButton(name, text) -- adds an dynamic created button to the designer frame and adds them to the frametbl
 
 	account = framecount + 1
@@ -394,7 +395,7 @@ function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the de
 	frame:SetMovable(true)
 	frame:Disable(true)
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame) end end)
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
 
 	frametbl[account] = frame;
 
@@ -412,7 +413,7 @@ function SUI:UpdateObjects(name, x, y, scale, ftype) -- for some debug purpose
 
 end
 
-function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or the poition of a selected frame 
+function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or the poition of the selected frame 
 
 	if not width and not high and not x and not y then
 
@@ -583,6 +584,23 @@ function SUI:StringSplit(string, name, index)
 	    if index == true and count == 2 then self:Print(word); return tonumber(word) end
 
 	end
+
+end
+
+function SUI:ModAttr(frame, mod)
+
+	ftype = frame:GetObjectType()
+
+	
+	if ftype == "Frame" then accframe = frame.s; accframe:SetText(mod) return end
+
+	if ftype == "Button" then frame:SetText(mod) return end
+
+	if ftype == "CheckButton" then frame:SetChecked(mod) return end
+
+	if ftype == "EditBox" then frame:SetText(mod) return end
+
+	if ftype == "DropDown" then frame:SetText(mod) return end
 
 end
 
