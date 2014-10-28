@@ -1,3 +1,12 @@
+local SUI = LibStub("AceAddon-3.0"):NewAddon("SUI", "AceTimer-3.0")
+-- SimpleUI | Designer to create simple Frames with UI Elements
+
+
+--------------Global Variables----------------
+local MainFrame
+local timer
+
+local delMode = false
 local movMode = true
 local selMode = false
 local frametbl = {}
