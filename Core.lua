@@ -1,24 +1,20 @@
-local SUI = LibStub("AceAddon-3.0"):NewAddon("SUI")
--- VFrame Frame for standard PvP infos and a PvP arena statistic frame
--- geting infos in arena and sorting data
-
-
---------------Global Variables----------------
-local MainFrame
-
-local delMode = false
 local movMode = true
 local selMode = false
 local frametbl = {}
 local framecount = 0
 local acName = ""
 local acIndex
+local colortbl = {}
 ----------------------------------------------
 
 
 function SUI:OnInitialize()
 
-	self:Print(WorldFrame:GetWidth())
+	--VFrame.db = LibStub("AceDB-3.0"):New("VFrameDB")
+	--VFrame.db.RegisterCallback(VFrame, "OnDatabaseShutdown", "BeforeLogout")
+
+	self.db = LibStub("AceDB-3.0"):New("SUIDB")
+	self.db.RegisterCallback(SUI, "OnDatabaseShutdown", "SaveProject")
 
 
 	local resolutions = {GetScreenResolutions()}
@@ -34,24 +30,17 @@ function SUI:OnInitialize()
 
 	MainFrame = self:CreateMainFrame(sizetbl)
 
-	self:Print("AddOn succsessfully loaded!")
+	self:Print("AddOn successfully loaded!")
 
 
-
-
+  	self:ScheduleTimer("SaveProject", 15)
 
 	--MainFrame:Hide()
 
 end
 
 
------------------Method Part-----------------
-
-function SUI:Print(msg) -- the print funktion with the Red Simple UI before every chat msg
-
-	print("|cffff0020Simple UI|r: " .. msg)
-
-end
+-----------------Core Part-----------------
 
 function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame with all sub-frames (much functions in the OnClick-Events)
 	
@@ -333,7 +322,7 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.cb:SetPoint("BOTTOMLEFT", frame, 260, 30)
 	frame.cb.text = _G["MainFrame_CreateB" .. "Text"]
 	frame.cb.text:SetText("Create Code")
-	frame.cb:SetScript("OnClick", function() SUI:CreateCode() end )
+	frame.cb:SetScript("OnClick", function() --[[SUI:CreateCode()]] ReloadUI() end )
 
 
 
@@ -353,6 +342,23 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.t:SetSize(85, 20)
 	frame.t:SetPoint("BOTTOMLEFT", frame, 370, 5)
 	frame.t:SetText("Text")
+
+
+	frame.ext = CreateFrame("Frame", "MainFrame_ext", frame) 
+	frame.ext:SetSize(380, 420)
+	frame.ext:SetPoint("CENTER", frame, 220, 0)
+	texture = frame.ext:CreateTexture()
+	texture:SetAllPoints() 
+	texture:SetTexture(0,0,0,1) 
+	frame.ext.background = texture
+
+	frame.ext.s = CreateFrame("Button", "MainFrame_extsb", frame.ext, "UIPanelButtonTemplate")
+	frame.ext.s:SetSize(370, 30)
+	frame.ext.s:SetPoint("BOTTOMRIGHT", frame.ext, -5, 5)
+	frame.ext.s.text = _G["MainFrame_extsb" .. "Text"]
+	frame.ext.s.text:SetText("Save")
+
+	frame.ext:Hide()
 
 
 	frame.sel:Hide()
@@ -404,6 +410,7 @@ function SUI:AddText(name, text) -- adds an dynamic created FontString to the de
 	frame.s:SetTextColor(1, 1, 1)
 	frame.s:SetText(text)
 	frame.s.s = 15
+	frame.s.f = "Fonts\\ARIALN.TTF"
 	frame.i = "FontString"
 
 	frametbl[account] = frame;
@@ -600,12 +607,6 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 
 end
 
-function SUI:round(n) -- rounds a value 
-
-    return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
-
-end
-
 function SUI:GetRPos(x, y, gx, gy) -- returns the real position of a frame in the designer frame
 	
 	dy = MainFrame.designer:GetBottom()
@@ -619,20 +620,7 @@ function SUI:GetRPos(x, y, gx, gy) -- returns the real position of a frame in th
 
 end
 
-function SUI:StringSplit(string, name, index)
-	count = 0
-	
-	for word in string.gmatch(string, '([^;]+)') do
-		count = count + 1
-
-	    if name == true and count == 1 then self:Print(word); return word end
-	    if index == true and count == 2 then self:Print(word); return tonumber(word) end
-
-	end
-
-end
-
-function SUI:ModAttr(frame, mod)
+function SUI:ModAttr(frame, mod) -- modifies an atribute of the given frame 
 
 	ftype = frame:GetObjectType()
 
@@ -649,23 +637,32 @@ function SUI:ModAttr(frame, mod)
 
 end
 
-function SUI:StartExt()
+function SUI:StartExt() -- start the Extendet menu for the actual frame 
 
 	accframe = frametbl[acIndex]
 	
 	ftype = accframe.i
 
+	MainFrame.designer:Hide()
+
+	MainFrame.ext:Show()
+	
+
 
 	if ftype == "Frame" then 
 
-		
+		self:ColorPicker(accframe)
+
+		MainFrame.ext.s:SetScript("OnClick", function() MainFrame.ext:Hide(); MainFrame.designer:Show();  end )
 
 		return
 	end
 
 	if ftype == "Button" then 
 
-		
+		self:ColorPicker(accframe)
+
+		MainFrame.ext.s:SetScript("OnClick", function() MainFrame.ext:Hide(); MainFrame.designer:Show();  end )
 
 		return 
 	end
@@ -700,9 +697,57 @@ function SUI:StartExt()
 
 end
 
+
+---- Short functions -----------------
+
+function SUI:StringSplit(string, name, index) -- splits an string into 2
+	count = 0
+	
+	for word in string.gmatch(string, '([^;]+)') do
+		count = count + 1
+
+	    if name == true and count == 1 then self:Print(word); return word end
+	    if index == true and count == 2 then self:Print(word); return tonumber(word) end
+
+	end
+
+end
+
+function SUI:round(n) -- rounds a value 
+
+    return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
+
+end
+
+function SUI:Print(msg) -- the print funktion with the Red SimpleUI before every chat msg
+
+	print("|cffff0020Simple UI|r: " .. msg)
+
+end
+
+function SUI:ColorPicker(frame) -- shows a colorpicker and modifies the color of the given frame
+
+		texture = frame:CreateTexture()
+		texture:SetAllPoints()
+	
+		ColorPickerFrame:SetColorRGB(0,0,0);
+		ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = nil, 1;
+		ColorPickerFrame.previousValues = {0,0,0,1};
+		ColorPickerFrame.func = function () colortbl[1], colortbl[2], colortbl[3] = ColorPickerFrame:GetColorRGB(); texture:SetTexture(colortbl[1],colortbl[2],colortbl[3],colortbl[4])  end
+		ColorPickerFrame.opacityFunc = function () colortbl[4] = OpacitySliderFrame:GetValue(); texture:SetTexture(colortbl[1],colortbl[2],colortbl[3],colortbl[4])  end
+		ColorPickerFrame.cancelFunc = function ()  end
+		ColorPickerFrame:Hide();
+		ColorPickerFrame:Show();
+ 
+		
+		MainFrame.ext.background = texture
+
+end
+
+
 ----- Code Creation ----------
 
-function SUI:CreateCode()
+function SUI:CreateCode() -- creates the code witch dynamic names 
 
 	-- userNameFrame "" müssen entfernt werden!!!
 	afz = "\""
@@ -850,5 +895,26 @@ function SUI:CreateCode()
 
 	scrollframe:SetScrollChild(content.e)
 
+end
+
+
+-- Project -----------------
+
+function SUI:SaveProject()
+	
+	-- save frametable and designer frame
+	self.db.global.frametbl = frametbl
+	self.db.global.framecount = framecount
+	self.db.global.SavedProject = true
 
 end
+
+function SUI:RebuildProject()
+	
+	-- get the frametable and the designer frame out of the db
+	-- rebuild the project out of the frametable
+
+end
+
+----------------------------
+
