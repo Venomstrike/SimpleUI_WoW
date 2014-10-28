@@ -1,11 +1,11 @@
 ## Interface: 60000
 ## Version: 1.2.6
-## Title: Simple UI by |cffff0020Vènomstrikè|r
+## Title: SimpleUI by |cffff0020Vènomstrikè|r
 ## Author: Max aka Vènomstrikè
 ## X-Category: Data, UI, Creating
 ## X-Credits: Thanks to all other AddOn programmers! For doing such an great work!!
 ## Notes: Simply creating simple UI's
-## OptionalDeps: Ace3, !BlizzBugsSuck, !ClassColors
+## OptionalDeps: Ace3
 ## SavedVariables: SUIDB
 
 ## LoadManagers: AddonLoader
@@ -13,7 +13,13 @@
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceHook-3.0\AceHook-3.0.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 #@end-no-lib-strip@
 
 Core.lua
+
+
 
