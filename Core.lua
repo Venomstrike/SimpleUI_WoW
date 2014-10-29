@@ -119,9 +119,9 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 
 
 	frame.sel = CreateFrame("Frame", "MainFrame_sel", frame) 
-	frame.sel:SetSize(410, 60)
+	frame.sel:SetSize(430, 60)
 	frame.sel:SetFrameStrata("DIALOG")
-	frame.sel:SetPoint("BOTTOMLEFT", frame, 480, 0)
+	frame.sel:SetPoint("BOTTOMLEFT", frame, 685, 0)
 	texture = frame.sel:CreateTexture()
 	texture:SetAllPoints() 
 	texture:SetTexture(0,0,0,0.3) 
@@ -307,6 +307,51 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.t.text:SetText("Add Text")
 	frame.t:SetScript("OnClick", function() if MainFrame.n:GetText() == "" or  MainFrame.t:GetText() == "" then return end SUI:AddText(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
 
+	frame.cb = CreateFrame("Button", "MainFrame_AddButtonCB", frame, "UIPanelButtonTemplate")
+	frame.cb:SetSize(110, 20)
+	frame.cb:SetPoint("BOTTOMLEFT", frame, 460, 30)
+	frame.cb.text = _G["MainFrame_AddButtonCB" .. "Text"]
+	frame.cb.text:SetText("Add CheckBox")
+	frame.cb:SetScript("OnClick", function() if MainFrame.n:GetText() == "" then return end SUI:AddCheckButton(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
+
+	frame.d = CreateFrame("Button", "MainFrame_AddButtondd", frame, "UIPanelButtonTemplate")
+	frame.d:SetSize(110, 20)
+	frame.d:SetPoint("BOTTOMLEFT", frame, 460, 5)
+	frame.d.text = _G["MainFrame_AddButtondd" .. "Text"]
+	frame.d.text:SetText("Add DropDown")
+	frame.d:SetScript("OnClick", function() if MainFrame.n:GetText() == "" or  MainFrame.t:GetText() == "" then return end SUI:AddDropDown(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
+
+	frame.i = CreateFrame("Button", "MainFrame_AddButtonib", frame, "UIPanelButtonTemplate")
+	frame.i:SetSize(95, 20)
+	frame.i:SetPoint("BOTTOMLEFT", frame, 575, 5)
+	frame.i.text = _G["MainFrame_AddButtonib" .. "Text"]
+	frame.i.text:SetText("Add Icon")
+	frame.i:SetScript("OnClick", function() if MainFrame.n:GetText() == "" or  MainFrame.t:GetText() == "" then return end SUI:AddIcon(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
+
+	frame.f = CreateFrame("Button", "MainFrame_AddButtonfb", frame, "UIPanelButtonTemplate")
+	frame.f:SetSize(95, 20)
+	frame.f:SetPoint("BOTTOMLEFT", frame, 575, 30)
+	frame.f.text = _G["MainFrame_AddButtonfb" .. "Text"]
+	frame.f.text:SetText("Add Frame")
+	frame.f:SetScript("OnClick", function() if MainFrame.n:GetText() == "" or  MainFrame.t:GetText() == "" then return end SUI:AddFrame(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
+
+
+
+
+	frame.pb = CreateFrame("Button", "MainFrame_AddButtonpb", frame, "UIPanelButtonTemplate")
+	frame.pb:SetSize(80, 20)
+	frame.pb:SetPoint("BOTTOMRIGHT", frame, -5, 30)
+	frame.pb.text = _G["MainFrame_AddButtonpb" .. "Text"]
+	frame.pb.text:SetText("Project")
+	frame.pb:SetScript("OnClick", function() SUI:OpenProject() end )
+
+	frame.ob = CreateFrame("Button", "MainFrame_AddButtonob", frame, "UIPanelButtonTemplate")
+	frame.ob:SetSize(80, 20)
+	frame.ob:SetPoint("BOTTOMRIGHT", frame, -5, 5)
+	frame.ob.text = _G["MainFrame_AddButtonob" .. "Text"]
+	frame.ob.text:SetText("Options")
+	frame.ob:SetScript("OnClick", function() SUI:OpenOptions() end )
+
 
 
 
@@ -431,6 +476,97 @@ function SUI:AddText(name, text) -- adds an dynamic created FontString to the de
 
 end
 
+function SUI:AddCheckButton(name, text) -- adds an dynamic created CheckBox to the designer frame and adds them to the frametbl
+	
+	account = framecount + 1
+	framecount = framecount + 1
+
+	local frame = CreateFrame("CheckButton", name .. ";" .. account, MainFrame.designer, "UICheckButtonTemplate")
+	frame:SetSize(28, 28)
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame.text = _G[name .. ";" .. account .. "Text"]
+	frame.text:SetText(text)
+	frame:SetChecked(true)
+	frame:SetMovable(true)
+	frame:Disable()
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "CheckButton"
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddFrame (name, text)
+	
+	-- add frame
+
+end
+
+function SUI:AddIcon(name, spellid)
+	
+	-- adds frame witch icon path set to it
+
+end
+
+function SUI:AddDropDown(name, text) -- adds an dynamic created DropDownMenu to the designer frame and adds them to the frametbl
+	
+	account = framecount + 1
+	framecount = framecount + 1
+
+
+	local frame = CreateFrame("Button", name .. ";" .. account, MainFrame.designer, "UIDropDownMenuTemplate") 
+	frame:ClearAllPoints()
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame:SetMovable(true)
+	 
+	local items = {
+		text,
+	}
+	 
+	--local function OnClick(self)
+	  --UIDropDownMenu_SetSelectedID(frame, self:GetID())
+	--end
+	 
+	local function initialize(self, level)
+	   local info = UIDropDownMenu_CreateInfo()
+	   for k,v in pairs(items) do
+	      info = UIDropDownMenu_CreateInfo()
+	      info.text = v
+	      info.value = v
+	      info.func = OnClick
+	      UIDropDownMenu_AddButton(info, level)
+	   end
+	end
+	 
+	 
+	UIDropDownMenu_Initialize(frame, initialize)
+	UIDropDownMenu_SetWidth(frame, 100);
+	UIDropDownMenu_SetButtonWidth(frame, 124)
+	UIDropDownMenu_SetSelectedID(frame, 1)
+	UIDropDownMenu_JustifyText(frame, "LEFT")
+	UIDropDownMenu_DisableDropDown(frame) 
+
+	
+	frame.s = CreateFrame("Frame", name .. ";" .. account .. ";" .. "_subframe", frame) 
+	frame.s:SetSize(95, 10) 
+	frame.s:SetPoint("BOTTOMLEFT", frame, 25, 0) 
+	frame.s:EnableMouse(true)
+	frame.s:SetMovable(true)
+	frame.s:SetFrameStrata("DIALOG")
+	texture = frame.s:CreateTexture()
+	texture:SetAllPoints() 
+	texture:SetTexture(0.3,0.3,0.3,1) 
+	frame.s.background = texture
+	frame.s:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
+	frame.s:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.items = text
+	frame.i = "DropDown"
+
+	frametbl[account] = frame;
+
+end
+
 function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the designer frame and adds them to the frametbl
 	
 	account = framecount + 1
@@ -441,7 +577,7 @@ function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the de
 	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
 	frame:SetText(text)
 	frame:SetMovable(true)
-	frame:Disable(true)
+	frame:Disable()
 	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
 	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
 	frame.i = "EditBox"
@@ -578,7 +714,8 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 
    MainFrame.sel.n:SetText("Name:  " .. acName)
 
-   if frame:GetObjectType() == "Frame" then
+
+   if frame.i == "FontString" then
 
    	   MainFrame.sel.se:SetText(frame.s.s)
 	   MainFrame.sel.te:SetText(frame.s:GetText())
@@ -608,16 +745,43 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	     return
    end
 
+   if frame.i == "CheckButton" then 
 
-   MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
-   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
-   MainFrame.sel.te:SetText(frame:GetText())
-   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
-   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+   	  MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
+	   MainFrame.sel.te:SetText(frame.text:GetText())
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
 
-   	MainFrame.sel.se2:Enable()
-	   MainFrame.sel.seb3:Enable()
-	     MainFrame.sel.seb4:Enable()
+
+   	return
+   end
+
+   if frame.i == "DropDown" then
+
+	  MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
+	   MainFrame.sel.te:SetText(frame.items)
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+   	
+
+   	return
+   end
+
+   if frame.i == "Button" then
+	   MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.te:SetText(frame:GetText())
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   	MainFrame.sel.se2:Enable()
+		   MainFrame.sel.seb3:Enable()
+		     MainFrame.sel.seb4:Enable()
+
+	 return
+	end
 
 end
 
