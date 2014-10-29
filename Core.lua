@@ -381,7 +381,7 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.cb:SetPoint("BOTTOMLEFT", frame, 260, 30)
 	frame.cb.text = _G["MainFrame_CreateB" .. "Text"]
 	frame.cb.text:SetText("Create Code")
-	frame.cb:SetScript("OnClick", function() --[[SUI:CreateCode()]] ReloadUI() end )
+	frame.cb:SetScript("OnClick", function() SUI:CreateCode() end )
 
 
 
