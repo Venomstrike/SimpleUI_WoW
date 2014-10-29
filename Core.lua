@@ -21,11 +21,6 @@ local projtbl = {}
 
 function SUI:OnInitialize()
 
-
-	--self.db = LibStub("AceDB-3.0"):New("SUIDB")
-	--self.db.RegisterCallback(SUI, "OnDatabaseShutdown", "SaveProject")
-
-
 	local resolutions = {GetScreenResolutions()}
 	res = resolutions[GetCurrentResolution()]
 	sizetbl = {}
@@ -43,9 +38,7 @@ function SUI:OnInitialize()
 
 	self:RegisterChatCommand("sui", function () MainFrame:Show() end)
 
-	self:ScheduleRepeatingTimer("AutoSave", 5)
-
-	if SUIDB then MainFrame:Hide(); self:ProjectHandling() end
+	self:ScheduleRepeatingTimer("AutoSave", 15)
 
 	self:Print("AddOn successfully loaded!")
 
@@ -168,39 +161,39 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.sel.se:SetSize(30, 20)
 	frame.sel.se:SetPoint("CENTER", frame.sel, 50, 15)
 	frame.sel.se:SetText("")
-	frame.sel.se:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se") end )
+	frame.sel.se:SetScript("OnEnterPressed", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se", true) end )
 
 	frame.sel.seb1 = CreateFrame("Button", "MainFrame_sb1B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb1:SetSize(20, 10)
 	frame.sel.seb1:SetPoint("CENTER", frame.sel, 70, 20)
 	frame.sel.seb1.text = _G["MainFrame_sb1B" .. "Text"]
 	frame.sel.seb1.text:SetText("+")
-	frame.sel.seb1:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width+") end )
+	frame.sel.seb1:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width+", false) end )
 	frame.sel.seb2 = CreateFrame("Button", "MainFrame_sb2B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb2:SetSize(20, 10)
 	frame.sel.seb2:SetPoint("CENTER", frame.sel, 70, 10)
 	frame.sel.seb2.text = _G["MainFrame_sb2B" .. "Text"]
 	frame.sel.seb2.text:SetText("-")
-	frame.sel.seb2:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width-") end )
+	frame.sel.seb2:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), MainFrame.sel.se:GetText(), nil, nil, nil, "width-", false) end )
 
 	frame.sel.se2 = CreateFrame("EditBox", "MainFrame_sel_s2EB", frame.sel, "InputBoxTemplate")
 	frame.sel.se2:SetSize(30, 20)
 	frame.sel.se2:SetPoint("CENTER", frame.sel, 110, 15)
 	frame.sel.se2:SetText("")
-	frame.sel.se2:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se2") end )
+	frame.sel.se2:SetScript("OnEnterPressed", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "se2", true) end )
 
 	frame.sel.seb3 = CreateFrame("Button", "MainFrame_sb3B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb3:SetSize(20, 10)
 	frame.sel.seb3:SetPoint("CENTER", frame.sel, 130, 20)
 	frame.sel.seb3.text = _G["MainFrame_sb3B" .. "Text"]
 	frame.sel.seb3.text:SetText("+")
-	frame.sel.seb3:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high+") end )
+	frame.sel.seb3:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high+", false) end )
 	frame.sel.seb4 = CreateFrame("Button", "MainFrame_sb4B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.seb4:SetSize(20, 10)
 	frame.sel.seb4:SetPoint("CENTER", frame.sel, 130, 10)
 	frame.sel.seb4.text = _G["MainFrame_sb4B" .. "Text"]
 	frame.sel.seb4.text:SetText("-")
-	frame.sel.seb4:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high-") end )
+	frame.sel.seb4:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, MainFrame.sel.se2:GetText(), nil, nil, "high-", false) end )
 
 
 
@@ -216,39 +209,39 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.sel.pe:SetSize(30, 20)
 	frame.sel.pe:SetPoint("CENTER", frame.sel, 50, -15)
 	frame.sel.pe:SetText("")
-	frame.sel.pe:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe") end )
+	frame.sel.pe:SetScript("OnEnterPressed", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe", true) end )
 
 	frame.sel.peb1 = CreateFrame("Button", "MainFrame_pb1B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb1:SetSize(20, 10)
 	frame.sel.peb1:SetPoint("CENTER", frame.sel, 70, -10)
 	frame.sel.peb1.text = _G["MainFrame_pb1B" .. "Text"]
 	frame.sel.peb1.text:SetText("+")
-	frame.sel.peb1:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl+") end )
+	frame.sel.peb1:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl+",false) end )
 	frame.sel.peb2 = CreateFrame("Button", "MainFrame_pb2B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb2:SetSize(20, 10)
 	frame.sel.peb2:SetPoint("CENTER", frame.sel, 70, -20)
 	frame.sel.peb2.text = _G["MainFrame_pb2B" .. "Text"]
 	frame.sel.peb2.text:SetText("-")
-	frame.sel.peb2:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl-") end )
+	frame.sel.peb2:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, MainFrame.sel.pe:GetText(), nil, "posl-", false) end )
 
 	frame.sel.pe2 = CreateFrame("EditBox", "MainFrame_sel_p2EB", frame.sel, "InputBoxTemplate")
 	frame.sel.pe2:SetSize(30, 20)
 	frame.sel.pe2:SetPoint("CENTER", frame.sel, 110, -15)
 	frame.sel.pe2:SetText("")
-	frame.sel.pe2:SetScript("OnEnterPressed", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe2") end )
+	frame.sel.pe2:SetScript("OnEnterPressed", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, nil, "pe2", true) end )
 
 	frame.sel.peb3 = CreateFrame("Button", "MainFrame_pb3B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb3:SetSize(20, 10)
 	frame.sel.peb3:SetPoint("CENTER", frame.sel, 130, -10)
 	frame.sel.peb3.text = _G["MainFrame_pb3B" .. "Text"]
 	frame.sel.peb3.text:SetText("+")
-	frame.sel.peb3:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb+") end )
+	frame.sel.peb3:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb+", false) end )
 	frame.sel.peb4 = CreateFrame("Button", "MainFrame_pb4B", frame.sel, "UIPanelButtonTemplate")
 	frame.sel.peb4:SetSize(20, 10)
 	frame.sel.peb4:SetPoint("CENTER", frame.sel, 130, -20)
 	frame.sel.peb4.text = _G["MainFrame_pb4B" .. "Text"]
 	frame.sel.peb4.text:SetText("-")
-	frame.sel.peb4:SetScript("OnClick", function() SUI:ModVetor(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb-") end )
+	frame.sel.peb4:SetScript("OnClick", function() SUI:ModVector(MainFrame.sel.n:GetText(), nil, nil, nil, MainFrame.sel.pe2:GetText(), "posb-", false) end )
 
 
 
@@ -333,7 +326,7 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.f:SetPoint("BOTTOMLEFT", frame, 575, 30)
 	frame.f.text = _G["MainFrame_AddButtonfb" .. "Text"]
 	frame.f.text:SetText("Add Frame")
-	frame.f:SetScript("OnClick", function() if MainFrame.n:GetText() == "" or  MainFrame.t:GetText() == "" then return end SUI:AddFrame(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
+	frame.f:SetScript("OnClick", function() if MainFrame.n:GetText() == "" then return end SUI:AddFrame(MainFrame.n:GetText(), MainFrame.t:GetText()); MainFrame.n:SetText(""); MainFrame.t:SetText("") end )
 
 
 
@@ -381,7 +374,7 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 	frame.cb:SetPoint("BOTTOMLEFT", frame, 260, 30)
 	frame.cb.text = _G["MainFrame_CreateB" .. "Text"]
 	frame.cb.text:SetText("Create Code")
-	frame.cb:SetScript("OnClick", function() SUI:CreateCode() end )
+	frame.cb:SetScript("OnClick", function() --[[SUI:CreateCode()]] ReloadUI() end )
 
 
 
@@ -426,166 +419,6 @@ function SUI:CreateMainFrame(sizetbl) -- Creates the complete designer frame wit
 
 end
 
-
--- frame:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false), SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true)) | to set frames to the designer after moved (unused)
-
-function SUI:AddButton(name, text) -- adds an dynamic created button to the designer frame and adds them to the frametbl
-
-	account = framecount + 1
-	framecount = framecount + 1
-
-	local frame = CreateFrame("Button", name .. ";" .. account, MainFrame.designer, "UIPanelButtonTemplate")
-	frame:SetSize(80, 25)
-	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
-	frame.text = _G[name .. ";" .. account .. "Text"]
-	frame.text:SetText(text)
-	frame:SetMovable(true)
-	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
-	frame.i = "Button"
-
-	frametbl[account] = frame;
-
-end
-
-function SUI:AddText(name, text) -- adds an dynamic created FontString to the designer frame and adds them to the frametbl
-
-	account = framecount + 1
-	framecount = framecount + 1
-
-	local frame = CreateFrame("Frame", name .. ";" .. account .. ";" .. "_subframe", MainFrame.designer) 
-	frame:SetSize(50, 35) 
-	frame:SetPoint("CENTER", MainFrame.designer) 
-	frame:EnableMouse(true)
-	frame:SetMovable(true)
-	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
-	
-	frame.s = MainFrame.designer:CreateFontString(name .. ";" .. account) 
-	frame.s:SetPoint("CENTER", frame, "CENTER", 0, 0)
-	frame.s:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
-	frame.s:SetJustifyH("LEFT")
-	frame.s:SetShadowOffset(1, -1)
-	frame.s:SetTextColor(1, 1, 1)
-	frame.s:SetText(text)
-	frame.s.s = 15
-	frame.s.f = "Fonts\\ARIALN.TTF"
-	frame.i = "FontString"
-
-	frametbl[account] = frame;
-
-end
-
-function SUI:AddCheckButton(name, text) -- adds an dynamic created CheckBox to the designer frame and adds them to the frametbl
-	
-	account = framecount + 1
-	framecount = framecount + 1
-
-	local frame = CreateFrame("CheckButton", name .. ";" .. account, MainFrame.designer, "UICheckButtonTemplate")
-	frame:SetSize(28, 28)
-	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
-	frame.text = _G[name .. ";" .. account .. "Text"]
-	frame.text:SetText(text)
-	frame:SetChecked(true)
-	frame:SetMovable(true)
-	frame:Disable()
-	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
-	frame.i = "CheckButton"
-
-	frametbl[account] = frame;
-
-end
-
-function SUI:AddFrame (name, text)
-	
-	-- add frame
-
-end
-
-function SUI:AddIcon(name, spellid)
-	
-	-- adds frame witch icon path set to it
-
-end
-
-function SUI:AddDropDown(name, text) -- adds an dynamic created DropDownMenu to the designer frame and adds them to the frametbl
-	
-	account = framecount + 1
-	framecount = framecount + 1
-
-
-	local frame = CreateFrame("Button", name .. ";" .. account, MainFrame.designer, "UIDropDownMenuTemplate") 
-	frame:ClearAllPoints()
-	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
-	frame:SetMovable(true)
-	 
-	local items = {
-		text,
-	}
-	 
-	--local function OnClick(self)
-	  --UIDropDownMenu_SetSelectedID(frame, self:GetID())
-	--end
-	 
-	local function initialize(self, level)
-	   local info = UIDropDownMenu_CreateInfo()
-	   for k,v in pairs(items) do
-	      info = UIDropDownMenu_CreateInfo()
-	      info.text = v
-	      info.value = v
-	      info.func = OnClick
-	      UIDropDownMenu_AddButton(info, level)
-	   end
-	end
-	 
-	 
-	UIDropDownMenu_Initialize(frame, initialize)
-	UIDropDownMenu_SetWidth(frame, 100);
-	UIDropDownMenu_SetButtonWidth(frame, 124)
-	UIDropDownMenu_SetSelectedID(frame, 1)
-	UIDropDownMenu_JustifyText(frame, "LEFT")
-	UIDropDownMenu_DisableDropDown(frame) 
-
-	
-	frame.s = CreateFrame("Frame", name .. ";" .. account .. ";" .. "_subframe", frame) 
-	frame.s:SetSize(95, 10) 
-	frame.s:SetPoint("BOTTOMLEFT", frame, 25, 0) 
-	frame.s:EnableMouse(true)
-	frame.s:SetMovable(true)
-	frame.s:SetFrameStrata("DIALOG")
-	texture = frame.s:CreateTexture()
-	texture:SetAllPoints() 
-	texture:SetTexture(0.3,0.3,0.3,1) 
-	frame.s.background = texture
-	frame.s:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
-	frame.s:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
-	frame.items = text
-	frame.i = "DropDown"
-
-	frametbl[account] = frame;
-
-end
-
-function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the designer frame and adds them to the frametbl
-	
-	account = framecount + 1
-	framecount = framecount + 1
-
-	local frame = CreateFrame("EditBox", name .. ";" .. account, MainFrame.designer, "InputBoxTemplate")
-	frame:SetSize(85, 20)
-	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
-	frame:SetText(text)
-	frame:SetMovable(true)
-	frame:Disable()
-	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
-	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
-	frame.i = "EditBox"
-
-	frametbl[account] = frame;
-
-end
-
 function SUI:UpdateObjects(name, x, y, scale, ftype) -- for some debug purpose
 	
 	dy = MainFrame.designer:GetBottom()
@@ -598,16 +431,16 @@ function SUI:UpdateObjects(name, x, y, scale, ftype) -- for some debug purpose
 
 end
 
-function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or the poition of the selected frame 
+function SUI:ModVector(name, width, high, x, y, mod, entered) -- modificates the size or the poition of the selected frame 
 
-	if not width and not high and not x and not y then
+	if entered then
 
 		index = acIndex
 
 		accframe = frametbl[index]
 
 		if mod == "se" then
-			if accframe:GetObjectType() == "Frame" then accframe.s:SetFont("Fonts\\ARIALN.TTF", tonumber(MainFrame.sel.se:GetText()), "OUTLINE"); accframe.s.s = MainFrame.sel.se:GetText() return end
+			if accframe.i == "FontString" then accframe.s:SetFont("Fonts\\ARIALN.TTF", tonumber(MainFrame.sel.se:GetText()), "OUTLINE"); accframe.s.s = MainFrame.sel.se:GetText() return end
 			accframe:SetWidth(tonumber(MainFrame.sel.se:GetText()))
 		elseif mod == "se2" then
 			accframe:SetHeight(tonumber(MainFrame.sel.se2:GetText()))
@@ -620,8 +453,8 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 		end
 
 	 return
-
 	end
+
 
 	widthr = tonumber(width)
 
@@ -635,12 +468,8 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 
 	accframe = frametbl[index]
 
-	ftype = accframe:GetObjectType()
 
-	if ftype == "Frame" then ftype = accframe.s:GetObjectType() end
-
-
-	if ftype == "FontString" then
+	if accframe.i == "FontString" then
 
 
 		if mod == "width+" then
@@ -669,7 +498,10 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 			-- not triggered
 		end
 
-	else
+	 return
+	end
+
+
 
 		if mod == "width+" then
 			accframe:SetWidth(widthr + 1)
@@ -703,8 +535,6 @@ function SUI:ModVetor(name, width, high, x, y, mod) -- modificates the size or t
 			-- not triggered
 		end
 
-	end
-
 end
 
 function SUI:FrameSelect(frame) -- fills the selection tab with the infos
@@ -726,6 +556,10 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	    MainFrame.sel.seb3:Disable()
 	     MainFrame.sel.seb4:Disable()
 
+	     	MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
+
    	return 
 
    end
@@ -742,6 +576,10 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	    MainFrame.sel.seb3:Disable()
 	     MainFrame.sel.seb4:Disable()
 
+	     	MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
+
 	     return
    end
 
@@ -752,6 +590,14 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
 	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
 	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   MainFrame.sel.se2:Enable()
+		   MainFrame.sel.seb3:Enable()
+		     MainFrame.sel.seb4:Enable()
+
+		     MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
 
 
    	return
@@ -764,12 +610,21 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
 	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
 	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   MainFrame.sel.se2:Disable()
+	    MainFrame.sel.seb3:Disable()
+	     MainFrame.sel.seb4:Disable()
+
+	     	MainFrame.sel.se:Disable()
+		   		MainFrame.sel.seb1:Disable()
+		     		MainFrame.sel.seb2:Disable()
    	
 
    	return
    end
 
    if frame.i == "Button" then
+
 	   MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
 	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
 	   MainFrame.sel.te:SetText(frame:GetText())
@@ -779,6 +634,48 @@ function SUI:FrameSelect(frame) -- fills the selection tab with the infos
 	   	MainFrame.sel.se2:Enable()
 		   MainFrame.sel.seb3:Enable()
 		     MainFrame.sel.seb4:Enable()
+
+		     MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
+
+	 return
+	end
+
+	if frame.i == "Icon" then 
+
+	   MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.te:SetText("ID: " .. frame.id)
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+	   MainFrame.sel.se2:Enable()
+		   MainFrame.sel.seb3:Enable()
+		     MainFrame.sel.seb4:Enable()
+
+		     MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
+
+	 return
+	end
+
+	if frame.i == "Frame" then
+
+	MainFrame.sel.se:SetText(self:round(tonumber(frame:GetWidth())))
+	   MainFrame.sel.se2:SetText(self:round(tonumber(frame:GetHeight())))
+	   MainFrame.sel.te:SetText("Header: ")
+	   MainFrame.sel.pe:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false))
+	   MainFrame.sel.pe2:SetText(self:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true))
+
+		MainFrame.sel.se2:Enable()
+		   MainFrame.sel.seb3:Enable()
+		     MainFrame.sel.seb4:Enable()
+
+		     MainFrame.sel.se:Enable()
+		   		MainFrame.sel.seb1:Enable()
+		     		MainFrame.sel.seb2:Enable()
 
 	 return
 	end
@@ -876,6 +773,221 @@ function SUI:StartExt() -- start the Extendet menu for the actual frame
 end
 
 
+------ Add UI Elements --------------
+
+
+-- frame:SetPoint("BOTTOMLEFT", MainFrame.designer, SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), true, false), SUI:GetRPos(frame:GetLeft(), frame:GetBottom(), false, true)) | to set frames to the designer after moved (unused)
+
+function SUI:AddButton(name, text) -- adds an dynamic created button to the designer frame and adds them to the frametbl
+
+	account = framecount + 1
+	framecount = framecount + 1
+
+	local frame = CreateFrame("Button", name .. ";" .. account, MainFrame.designer, "UIPanelButtonTemplate")
+	frame:SetSize(80, 25)
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame.text = _G[name .. ";" .. account .. "Text"]
+	frame.text:SetText(text)
+	frame:SetMovable(true)
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "Button"
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddText(name, text) -- adds an dynamic created FontString to the designer frame and adds them to the frametbl
+
+	account = framecount + 1
+	framecount = framecount + 1
+
+	local frame = CreateFrame("Frame", name .. ";" .. account .. ";" .. "_subframe", MainFrame.designer) 
+	frame:SetSize(50, 35) 
+	frame:SetPoint("CENTER", MainFrame.designer) 
+	frame:EnableMouse(true)
+	frame:SetMovable(true)
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	
+	frame.s = MainFrame.designer:CreateFontString(name .. ";" .. account) 
+	frame.s:SetPoint("CENTER", frame, "CENTER", 0, 0)
+	frame.s:SetFont("Fonts\\ARIALN.TTF", 15, "OUTLINE")
+	frame.s:SetJustifyH("LEFT")
+	frame.s:SetShadowOffset(1, -1)
+	frame.s:SetTextColor(1, 1, 1)
+	frame.s:SetText(text)
+	frame.s.s = 15
+	frame.s.f = "Fonts\\ARIALN.TTF"
+	frame.i = "FontString"
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddCheckButton(name, text) -- adds an dynamic created CheckBox to the designer frame and adds them to the frametbl
+	
+	account = framecount + 1
+	framecount = framecount + 1
+
+	local frame = CreateFrame("CheckButton", name .. ";" .. account, MainFrame.designer, "UICheckButtonTemplate")
+	frame:SetSize(28, 28)
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame.text = _G[name .. ";" .. account .. "Text"]
+	frame.text:SetText(text)
+	frame:SetChecked(true)
+	frame:SetMovable(true)
+	frame:Disable()
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "CheckButton"
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddFrame (name, text) -- adds an dynamic created frame to the designer frame and adds them to the frametbl
+
+	account = framecount + 1
+	framecount = framecount + 1
+	
+	local frame = CreateFrame("Frame", name .. ";" .. account, MainFrame.designer) 
+	frame:SetSize(110, 110)
+	frame:SetFrameStrata("DIALOG")
+	frame:SetPoint("CENTER", MainFrame.designer)
+	texture = frame:CreateTexture()
+	texture:SetAllPoints() 
+	texture:SetTexture(0.4,0.4,0.4,1) 
+	frame.background = texture
+	frame:EnableMouse(true)
+	frame:SetMovable(true)
+	frame.i = "Frame"
+
+
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddIcon(name, spellid) -- adds an dynamic created frame with the spellIcon as its background to the designer frame and adds them to the frametbl
+
+	account = framecount + 1
+	framecount = framecount + 1
+	
+	spellpath = select(3, GetSpellInfo(spellid))
+
+	backdropS = {
+	  -- path to the background texture
+	  bgFile = spellpath,  
+	  -- true to repeat the background texture to fill the frame, false to scale it
+	  tile = false,
+	  -- size (width or height) of the square repeating background tiles (in pixels)
+	  tileSize = 20
+	}
+
+
+
+	local frame = CreateFrame("Frame", name .. ";" .. account, MainFrame.designer) 
+	frame:SetSize(60, 60)
+	frame:SetFrameStrata("DIALOG")
+	frame:SetPoint("CENTER", MainFrame.designer)
+	--texture = frame:CreateTexture()
+	--texture:SetAllPoints() 
+	--texture:SetTexture(0.23,0.23,0.23,1) 
+	--frame.background = texture
+	frame:EnableMouse(true)
+	frame:SetMovable(true)
+	frame:SetBackdrop(backdropS)
+
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "Icon"
+	frame.id = spellid
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddDropDown(name, text) -- adds an dynamic created DropDownMenu to the designer frame and adds them to the frametbl
+	
+	account = framecount + 1
+	framecount = framecount + 1
+
+
+	local frame = CreateFrame("Button", name .. ";" .. account, MainFrame.designer, "UIDropDownMenuTemplate") 
+	frame:ClearAllPoints()
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame:SetMovable(true)
+	 
+	local items = {
+		text,
+	}
+	 
+	--local function OnClick(self)
+	  --UIDropDownMenu_SetSelectedID(frame, self:GetID())
+	--end
+	 
+	local function initialize(self, level)
+	   local info = UIDropDownMenu_CreateInfo()
+	   for k,v in pairs(items) do
+	      info = UIDropDownMenu_CreateInfo()
+	      info.text = v
+	      info.value = v
+	      info.func = OnClick
+	      UIDropDownMenu_AddButton(info, level)
+	   end
+	end
+	 
+	 
+	UIDropDownMenu_Initialize(frame, initialize)
+	UIDropDownMenu_SetWidth(frame, 100);
+	UIDropDownMenu_SetButtonWidth(frame, 124)
+	UIDropDownMenu_SetSelectedID(frame, 1)
+	UIDropDownMenu_JustifyText(frame, "LEFT")
+	UIDropDownMenu_DisableDropDown(frame) 
+
+	
+	frame.s = CreateFrame("Frame", name .. ";" .. account .. ";" .. "_subframe", frame) 
+	frame.s:SetSize(95, 10) 
+	frame.s:SetPoint("CENTER", frame, 0, -15) 
+	frame.s:EnableMouse(true)
+	frame.s:SetMovable(true)
+	frame.s:SetFrameStrata("DIALOG")
+	texture = frame.s:CreateTexture()
+	texture:SetAllPoints() 
+	texture:SetTexture(0.3,0.3,0.3,1) 
+	frame.s.background = texture
+	frame.s:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame.s:Hide(); frame:Hide() end end) 
+	frame.s:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.items = text
+	frame.i = "DropDown"
+
+	frametbl[account] = frame;
+
+end
+
+function SUI:AddEditBox(name, text) -- adds an dynamic created EditBox to the designer frame and adds them to the frametbl
+	
+	account = framecount + 1
+	framecount = framecount + 1
+
+	local frame = CreateFrame("EditBox", name .. ";" .. account, MainFrame.designer, "InputBoxTemplate")
+	frame:SetSize(85, 20)
+	frame:SetPoint("CENTER", MainFrame.designer, 0, 0)
+	frame:SetText(text)
+	frame:SetMovable(true)
+	frame:Disable()
+	frame:SetScript("OnMouseDown", function (self, value) if movMode == true then frame:StartMoving() elseif delMode == true then frame:Hide() end end) 
+	frame:SetScript("OnMouseUp", function (self, value) if movMode == true then frame:StopMovingOrSizing(); elseif selMode == true then SUI:FrameSelect(frame); MainFrame.sel:Show() end end)
+	frame.i = "EditBox"
+
+	frametbl[account] = frame;
+
+end
+
+
 ---- Short functions -----------------
 
 function SUI:StringSplit(string, name, index) -- splits an string into 2
@@ -922,9 +1034,50 @@ function SUI:ColorPicker(frame) -- shows a colorpicker and modifies the color of
 end
 
 
+-- Project -----------------
+
+function SUI:ProjectHandling()
+	
+	-- Project Create/Open
+
+
+	MainFrame:Show()
+
+end
+
+function SUI:SaveProject()
+	
+	projtbl[1] = projName
+	projtbl[2] = frametbl
+	projtbl[3] = framecount
+	
+	-- save frametable and designer frame
+	SUIDB = projtbl
+
+end
+
+function SUI:AutoSave()
+
+	projtbl[1] = projName
+	projtbl[2] = frametbl
+	projtbl[3] = framecount
+	
+	-- save frametable and designer frame
+	SUIDB = projtbl
+
+end
+
+function SUI:RebuildProject()
+	
+	-- get the frametable and the designer frame out of the db
+	-- rebuild the project out of the frametable
+
+end
+
+
 ----- Code Creation ----------
 
-function SUI:CreateCode() -- creates the code witch dynamic names 
+function SUI:CreateCode() -- creates the code with dynamic names 
 
 	-- userNameFrame "" müssen entfernt werden!!!
 	afz = "\""
@@ -1074,43 +1227,5 @@ function SUI:CreateCode() -- creates the code witch dynamic names
 
 end
 
-
--- Project -----------------
-
-function SUI:ProjectHandling()
-	
-	-- Project Create/Open
-
-
-	MainFrame:Show()
-
-end
-
-function SUI:SaveProject()
-	
-	self.db.global.projects[projName].frametbl = frametbl
-	self.db.global.projects[projName].framecount = framecount
-	self.db.global.SavedProject = true
-
-end
-
-function SUI:AutoSave()
-
-	projtbl[1] = projName
-	projtbl[2] = frametbl
-	projtbl[3] = framecount
-	
-	-- save frametable and designer frame
-	SUIDB = projtbl
-
-end
-
-function SUI:RebuildProject()
-	
-	-- get the frametable and the designer frame out of the db
-	-- rebuild the project out of the frametable
-
-end
-
-----------------------------
+------------------------------
 
