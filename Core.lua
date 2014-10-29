@@ -1,4 +1,4 @@
-local SUI = LibStub("AceAddon-3.0"):NewAddon("SUI", "AceTimer-3.0")
+local SUI = LibStub("AceAddon-3.0"):NewAddon("SUI", "AceTimer-3.0", "AceConsole-3.0")
 -- SimpleUI | Designer to create simple Frames with UI Elements
 
 
@@ -10,20 +10,20 @@ local delMode = false
 local movMode = true
 local selMode = false
 local frametbl = {}
-local framecount = 0
+local framecount = 1
 local acName = ""
 local acIndex
 local colortbl = {}
+local projName = "testproject"
+local projtbl = {}
 ----------------------------------------------
 
 
 function SUI:OnInitialize()
 
-	--VFrame.db = LibStub("AceDB-3.0"):New("VFrameDB")
-	--VFrame.db.RegisterCallback(VFrame, "OnDatabaseShutdown", "BeforeLogout")
 
-	self.db = LibStub("AceDB-3.0"):New("SUIDB")
-	self.db.RegisterCallback(SUI, "OnDatabaseShutdown", "SaveProject")
+	--self.db = LibStub("AceDB-3.0"):New("SUIDB")
+	--self.db.RegisterCallback(SUI, "OnDatabaseShutdown", "SaveProject")
 
 
 	local resolutions = {GetScreenResolutions()}
@@ -39,10 +39,15 @@ function SUI:OnInitialize()
 
 	MainFrame = self:CreateMainFrame(sizetbl)
 
+	frametbl[1] = MainFrame.designer
+
+	self:RegisterChatCommand("sui", function () MainFrame:Show() end)
+
+	self:ScheduleRepeatingTimer("AutoSave", 5)
+
+	if SUIDB then MainFrame:Hide(); self:ProjectHandling() end
+
 	self:Print("AddOn successfully loaded!")
-
-
-  	self:ScheduleTimer("SaveProject", 15)
 
 	--MainFrame:Hide()
 
@@ -747,9 +752,8 @@ function SUI:ColorPicker(frame) -- shows a colorpicker and modifies the color of
 		ColorPickerFrame.cancelFunc = function ()  end
 		ColorPickerFrame:Hide();
 		ColorPickerFrame:Show();
- 
-		
-		MainFrame.ext.background = texture
+ 	
+		frame.background = texture
 
 end
 
@@ -909,12 +913,31 @@ end
 
 -- Project -----------------
 
+function SUI:ProjectHandling()
+	
+	-- Project Create/Open
+
+
+	MainFrame:Show()
+
+end
+
 function SUI:SaveProject()
 	
-	-- save frametable and designer frame
-	self.db.global.frametbl = frametbl
-	self.db.global.framecount = framecount
+	self.db.global.projects[projName].frametbl = frametbl
+	self.db.global.projects[projName].framecount = framecount
 	self.db.global.SavedProject = true
+
+end
+
+function SUI:AutoSave()
+
+	projtbl[1] = projName
+	projtbl[2] = frametbl
+	projtbl[3] = framecount
+	
+	-- save frametable and designer frame
+	SUIDB = projtbl
 
 end
 
